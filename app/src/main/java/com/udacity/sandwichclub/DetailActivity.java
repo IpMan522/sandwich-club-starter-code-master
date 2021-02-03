@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
 import org.json.JSONException;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
+
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -52,12 +56,13 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
 
         setTitle(sandwich.getMainName());
+
     }
 
     private void closeOnError() {
@@ -65,7 +70,31 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
+        TextView alsoKnownAs = findViewById(R.id.also_known_tv);
+        TextView descrpition = findViewById(R.id.description_tv);
+        TextView placeOfOrigin = findViewById(R.id.origin_tv);
+        TextView ingridients = findViewById(R.id.ingredients_tv);
 
+        alsoKnownAs.setText(listToString(sandwich.getAlsoKnownAs()));
+        ingridients.setText(listToString(sandwich.getIngredients()));
+        descrpition.setText(sandwich.getDescription());
+        placeOfOrigin.setText(sandwich.getPlaceOfOrigin());
+
+
+
+
+    }
+
+    private String listToString (List<String> array) {
+        String output = "";
+        for (int i = 0; i < array.size(); i++) {
+            if (i != array.size()-1) {
+                output = output + array.get(i)+", ";
+            } else {
+                output = output + array.get(i);
+            }
+        }
+        return output;
     }
 }
